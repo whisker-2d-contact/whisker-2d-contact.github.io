@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>Whisker-Like 2-D Contact Sensor · Siyue Yao</title>
+  <meta name="description" content="A whisker made from a thin carbon-fiber beam with three strain gauges. A mechanics model locates where it is touched, with friction and large bending, and a mobile robot uses two of them to judge channel widths and map a maze by touch.">
+  <meta name="citation_title" content="A Whisker-Like 2-D Contact Sensor for Environmental Perception of Mobile Robots">
+  <meta name="citation_author" content="Junjie Luo">
+  <meta name="citation_author" content="Siyue Yao">
+  <meta name="citation_author" content="Tao Yu">
+  <meta name="citation_author" content="Yanjun Wang">
+  <meta name="citation_author" content="Hao Wang">
+  <meta name="citation_author" content="Genliang Chen">
+  <meta name="citation_publication_date" content="2026/02">
+  <meta name="citation_journal_title" content="IEEE Transactions on Industrial Electronics">
+  <meta name="citation_volume" content="73">
+  <meta name="citation_issue" content="2">
+  <meta name="citation_firstpage" content="2544">
+  <meta name="citation_lastpage" content="2553">
+  <meta name="citation_publisher" content="Institute of Electrical and Electronics Engineers (IEEE)">
+  <meta name="citation_doi" content="10.1109/TIE.2025.3598187">
+  <meta property="og:title" content="Whisker-Like 2-D Contact Sensor">
+  <meta property="og:description" content="A carbon-fiber whisker with three strain gauges that knows where it was touched; on a mobile robot it judges gaps and maps a maze by touch.">
+  <meta property="og:image" content="https://whisker-2d-contact.github.io/hero.jpg">
+  <meta property="og:url" content="https://whisker-2d-contact.github.io/">
+  <link rel="canonical" href="https://whisker-2d-contact.github.io/">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23131312'/%3E%3Ctext x='32' y='44' text-anchor='middle' fill='%23ebe8e1' font-family='Georgia' font-size='36'%3ES%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@1,6..72,400&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@1,6..72,400&display=swap"></noscript>
+  <style>
+/* Shared styles for Siyue Yao's project pages.
+   Distilled from the Compliant Wrist, Fluorescent Whisker, FBG Whisker and UMI-Underwater pages:
+   a black opening, light reading sections, and Newsreader italics as the serif accent.
+   Each page sets --accent and --accent-hero on <body>. */
+:root {
+  --ink: #242523;
+  --muted: #6d7069;
+  --line: #e3e5df;
+  --wash: #f7f8f5;
+  --accent: #80611e;
+  --accent-hero: #efc985;
+  --max: 1040px;
+  --read: 800px;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+body { margin: 0; background: #fff; color: var(--ink); font: 17px/1.75 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-underline-offset: 4px; text-decoration-color: #b4b8ac; }
+a:hover { color: var(--accent); }
+button { font: inherit; cursor: pointer; }
+a, button, summary { -webkit-tap-highlight-color: transparent; }
+a:focus-visible, button:focus-visible, summary:focus-visible, pre:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+img, video { display: block; max-width: 100%; height: auto; }
+video { width: 100%; background: #090b08; }
+h1, h2, h3, h4, p, figure { margin: 0; }
+h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.035em; }
+p + p { margin-top: 18px; }
+sup { font-size: 0.65em; line-height: 0; vertical-align: super; }
+strong { font-weight: 600; }
+[hidden] { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.skip { position: absolute; top: -80px; left: 20px; z-index: 40; padding: 8px 15px; background: #fff; color: var(--ink); }
+.skip:focus { top: 10px; }
+
+/* ---------- Opening (both styles) ---------- */
+.hero { position: relative; background: #000; color: #f4f4f1; }
+.hero-nav { position: absolute; inset: 0 0 auto; z-index: 3; display: flex; justify-content: flex-end; gap: 20px; padding: 22px 5vw; font-size: 13px; line-height: 24px; }
+.hero-nav a { color: #efefed; text-decoration: none; }
+.hero-nav a:hover { color: var(--accent-hero); }
+.eyebrow { margin-bottom: 18px; font-size: 11px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: var(--accent); }
+.hero .eyebrow { color: var(--accent-hero); }
+.hero h1 { font-weight: 600; letter-spacing: -0.045em; text-wrap: balance; }
+.title-main { display: block; font-size: clamp(40px, 4.4vw, 72px); line-height: 1.04; }
+.title-detail { display: block; margin-top: 18px; font-size: clamp(18px, 1.5vw, 23px); font-weight: 400; line-height: 1.4; letter-spacing: -0.01em; color: #e6e6e2; }
+.hero-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; font-size: 12px; line-height: 1.7; color: #d1d1ce; }
+.hero-foot p { margin: 0; }
+.hero-foot a { color: inherit; }
+.motion { flex-shrink: 0; padding: 4px 12px; border: 1px solid #cccec7; border-radius: 20px; background: transparent; color: var(--muted); font-size: 11px; line-height: 1.7; }
+.motion:hover { border-color: var(--ink); color: var(--ink); }
+.hero .motion { border-color: #888; background: #0006; color: #eee; }
+.hero .motion:hover { border-color: #fff; color: #fff; }
+.hero a:focus-visible, .hero button:focus-visible { outline-color: var(--accent-hero); }
+
+/* Full-screen opening: the clip covers the first screen; the title sits over a quiet area.
+   .is-split keeps the clip on the left 64% and fades it into black under the title. */
+.hero--cover .hero-frame { position: relative; isolation: isolate; height: 100svh; min-height: 640px; overflow: hidden; }
+.hero--cover .hero-media { position: absolute; inset: 0; z-index: -2; background: #000; }
+.hero--cover .hero-media video { width: 100%; height: 100%; object-fit: cover; object-position: var(--hero-pos, 50% 50%); background: #000; }
+.hero--cover .hero-frame::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(180deg, rgba(0, 0, 0, 0.38), transparent 26%, transparent 70%, rgba(0, 0, 0, 0.62)); }
+.hero--cover .hero-heading { position: absolute; top: clamp(84px, 11svh, 124px); right: 5vw; width: min(44vw, 780px); text-shadow: 0 2px 16px #000b; }
+.hero--cover.is-split .hero-media { right: 36%; }
+.hero--cover.is-split .hero-media::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, transparent 62%, #000); }
+.hero--cover.is-split .hero-heading { width: min(32vw, 560px); }
+.hero--cover .hero-foot { position: absolute; left: 5vw; right: 5vw; bottom: 24px; }
+.hero-explore { position: absolute; bottom: 26px; left: 50%; z-index: 1; display: inline-flex; align-items: center; gap: 24px; padding-bottom: 7px; transform: translateX(-50%); border-bottom: 1px solid #aaa; color: #fff; font-size: 13px; text-decoration: none; }
+.hero-explore:hover { border-color: var(--accent-hero); color: var(--accent-hero); }
+
+/* Framed opening: title on black, the clip below at no more than its own width. */
+.hero--stage { padding: 82px 24px 0; }
+.hero--stage .hero-heading { max-width: 980px; margin: 0 auto; text-align: center; }
+.hero--stage .title-main { font-size: clamp(34px, 3.6vw, 54px); line-height: 1.1; }
+.hero-stage-media { position: relative; width: 100%; max-width: min(var(--max), var(--media-w, var(--max))); margin: 34px auto 0; }
+.hero-stage-media::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, #000, transparent 5%, transparent 95%, #000), linear-gradient(180deg, #000, transparent 8%, transparent 92%, #000); }
+.hero-stage-media.is-light::after { display: none; }
+.hero-stage-media.is-light video { outline: 1px solid #ffffff2e; }
+.hero--stage .hero-foot { max-width: min(var(--max), var(--media-w, var(--max))); margin: 12px auto 0; }
+
+/* Authors band under either opening */
+.hero-meta { max-width: 1100px; margin: 0 auto; padding: 36px 24px 44px; text-align: center; }
+.authors { margin: 0 auto; font-size: 16px; line-height: 1.85; }
+.authors a { text-decoration: none; }
+.hero .authors a:hover { color: #fff; text-decoration: underline; }
+.affiliations { margin-top: 10px; font-size: 14px; color: #c0c0bd; }
+.venue { margin-top: 10px; font-size: 13px; font-style: italic; color: #aaa; }
+.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 24px; }
+.button { display: inline-flex; align-items: center; gap: 16px; padding: 9px 20px; border: 1px solid #555; border-radius: 24px; background: #151515; color: #eee; font-size: 13px; line-height: 1.5; text-decoration: none; }
+.button:first-child { border-color: #f4f4f1; background: #f4f4f1; color: #20211e; }
+.button:hover { border-color: #ddd; background: #252525; color: #fff; }
+.button:first-child:hover { background: #fff; color: #000; }
+
+/* ---------- Page body ---------- */
+.section-nav { position: sticky; top: 0; z-index: 20; display: flex; justify-content: center; gap: 26px; overflow-x: auto; padding: 16px 24px; border-block: 1px solid var(--line); background: #ffffffed; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); scrollbar-width: none; }
+.section-nav::-webkit-scrollbar { display: none; }
+.section-nav a { flex-shrink: 0; font-size: 12px; white-space: nowrap; text-decoration: none; color: var(--muted); }
+.section-nav a.active { color: var(--accent); }
+.section { padding: 84px 30px; }
+.section.soft { background: var(--wash); }
+.section:not(.soft) + .section:not(.soft) { border-top: 1px solid var(--line); }
+.wide { max-width: var(--max); margin-left: auto; margin-right: auto; }
+.reading { max-width: var(--read); margin-left: auto; margin-right: auto; }
+.reading + .wide, .wide + .reading, .wide + .wide, .reading + .reading { margin-top: 32px; }
+h2 { margin-bottom: 14px; font-size: clamp(31px, 3.1vw, 42px); font-weight: 600; }
+h2 em { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.02em; }
+h3 { margin: 36px 0 14px; font-size: 24px; font-weight: 600; }
+.question { margin: 0 0 26px; font: italic 400 22px/1.45 var(--serif); letter-spacing: -0.01em; color: #6a6d66; }
+.statement { padding: 88px 30px 72px; text-align: center; }
+.statement .lead { max-width: 760px; margin: 22px auto 0; font-size: 22px; line-height: 1.6; color: #474c43; }
+.statement .lead + p { margin-top: 20px; color: #5e645a; }
+.note { margin-top: 24px; padding-left: 14px; border-left: 2px solid var(--line); font-size: 14px; line-height: 1.7; color: var(--muted); }
+
+/* Media blocks */
+figcaption { font-size: 13px; line-height: 1.65; color: var(--muted); }
+.figure-foot { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-top: 12px; }
+.figure-foot > span { flex: 1; }
+.clip > figcaption:not(.figure-foot) { margin-top: 12px; }
+/* A figure fits on one screen below the sticky nav (a tall one keeps its proportions, centred); click for the large view.
+   Multiplied onto the section behind it, so the white it is drawn on takes the section's colour (the large view keeps white). */
+.paper-fig img { width: 100%; max-height: max(320px, calc(100svh - 200px)); object-fit: contain; mix-blend-mode: multiply; }
+.paper-fig figcaption { margin-top: 12px; text-align: center; }
+.zoom { display: block; cursor: zoom-in; }
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
+.trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: start; }
+/* .pair.match: each item grows in proportion to its media's aspect ratio (--ar = width / height on the item),
+   so the two images or clips come out the same height */
+.pair.match { display: flex; align-items: flex-start; }
+.pair.match > * { flex: var(--ar, 1) 1 0; min-width: 0; }
+.strip { display: grid; grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr)); gap: 14px; }
+.strip img { width: 100%; aspect-ratio: var(--ratio, 4 / 5); object-fit: cover; border-radius: 3px; background: #0b0b0b; }
+.strip--contain img { object-fit: contain; }
+.strip--scroll { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 190px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; padding-bottom: 10px; scrollbar-width: thin; }
+.strip--scroll > figure { scroll-snap-align: start; }
+.strip--scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.strip figcaption { margin-top: 8px; font-size: 12px; line-height: 1.5; }
+.strip figcaption b { display: block; font-size: 13px; font-weight: 600; color: var(--ink); }
+.strip + .strip-caption { margin-top: 14px; }
+.strip-caption { font-size: 13px; text-align: center; color: var(--muted); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); padding: 22px 0; border-block: 1px solid var(--line); }
+.stat { padding: 6px 12px; text-align: center; }
+.stat + .stat { border-left: 1px solid var(--line); }
+.stat b { display: block; font-size: 30px; font-weight: 500; line-height: 1.2; letter-spacing: -0.04em; color: #2c2e2a; }
+.stat span { display: block; margin-top: 8px; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.steps { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 22px; padding: 28px 0; border-block: 1px solid var(--line); }
+.steps > div { padding: 0 20px; }
+.steps > div > span { font-size: 12px; color: var(--accent); }
+.steps h4 { margin: 10px 0; font-size: 22px; font-weight: 500; }
+.steps p { font-size: 14px; line-height: 1.6; color: var(--muted); }
+.steps > .arrow { align-self: center; font-size: 24px; color: #aeb4a7; }
+.tabs { display: flex; gap: 26px; margin-bottom: 20px; overflow-x: auto; border-bottom: 1px solid #cacfc3; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs button { flex-shrink: 0; margin-bottom: -1px; padding: 12px 0; border: 0; border-bottom: 2px solid transparent; background: none; color: var(--muted); font-size: 14px; white-space: nowrap; }
+.tabs button[aria-selected="true"] { border-bottom-color: var(--accent); color: var(--ink); }
+.tab-panel:not([hidden]) + .tab-panel { margin-top: 36px; }
+.tab-panel > p { max-width: var(--read); margin: 16px auto 0; font-size: 15px; }
+.evidence { border-block: 1px solid var(--line); }
+.evidence summary { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 16px 0; font-size: 14px; font-weight: 500; list-style: none; cursor: pointer; }
+.evidence summary::-webkit-details-marker { display: none; }
+.evidence summary::after { content: "+"; font-size: 20px; font-weight: 400; color: var(--muted); }
+.evidence[open] summary::after { content: "−"; }
+.evidence > :not(summary) { margin-bottom: 24px; }
+.evidence + .evidence { border-top: 0; }
+
+/* Data tables (values from the paper's tables): .table-wrap scrolls sideways on narrow screens */
+.table-wrap { overflow-x: auto; overscroll-behavior-x: contain; }
+.table-wrap:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.5; font-variant-numeric: tabular-nums; }
+.data-table th, .data-table td { padding: 10px 14px; border-bottom: 1px solid var(--line); text-align: right; }
+.data-table td { white-space: nowrap; }
+.data-table th:first-child, .data-table td:first-child { padding-left: 0; text-align: left; }
+.data-table th:last-child, .data-table td:last-child { padding-right: 0; }
+.data-table thead th { border-bottom-color: #cacfc3; font-size: 12px; font-weight: 600; line-height: 1.4; color: var(--muted); vertical-align: bottom; }
+.data-table tbody th { font-weight: 500; }
+.table-fig figcaption { margin-top: 12px; text-align: center; }
+/* .grouped: one tbody per group, its name in a th spanning the group's rows (scope="rowgroup"); lines only between
+   groups. .fit: only as wide as the columns, centred. */
+.data-table.grouped tbody tr > * { padding-top: 6px; padding-bottom: 6px; border-bottom: 0; }
+.data-table.grouped tbody tr:first-child > * { padding-top: 14px; }
+.data-table.grouped tbody tr:last-child > * { padding-bottom: 14px; }
+.data-table.grouped tbody + tbody tr:first-child > * { border-top: 1px solid var(--line); }
+.data-table.grouped tbody th[rowspan] { font-weight: 600; vertical-align: top; }
+.data-table.grouped tbody td:first-of-type { padding-left: 14px; color: var(--muted); text-align: right; }
+.data-table.fit { width: auto; margin: 0 auto; }
+.data-table.fit th, .data-table.fit td { padding-right: 26px; padding-left: 26px; }
+.data-table.fit th:first-child, .data-table.fit td:first-child { padding-left: 0; }
+.data-table.fit th:last-child, .data-table.fit td:last-child { padding-right: 0; }
+/* A table with color blocks of the same shares beside it (.heatmap, e.g. a classifier's results). Both are .data-table
+   with the same header rows ("Identified as" over the classes: th.axis), so their rows line up; the rows are taller
+   here, so the blocks come out square. A block is the palette's light end mixed toward its dark end by its share
+   (--v, 0 to 1), with rounded corners and a gap around it; th.axis-rows titles the rows, turned to read upward. */
+.table-pair { display: grid; grid-template-columns: minmax(0, 470px) auto; justify-content: center; align-items: start; gap: 64px; }
+.table-pair .data-table tbody th, .table-pair .data-table tbody td { padding-top: 15px; padding-bottom: 15px; }
+.data-table thead tr:not(:last-child) th { padding-bottom: 6px; }
+.data-table thead th:empty { border-bottom-color: transparent; }
+.data-table thead th.axis { font-size: 11px; letter-spacing: 0.08em; text-align: center; text-transform: uppercase; }
+.heatmap { --hm-low: #e9f2f5; --hm-high: #14527a; width: auto; }
+.heatmap th, .heatmap td, .heatmap thead th { border-bottom-color: transparent; }
+.heatmap thead th + th { padding-right: 0; padding-left: 0; text-align: center; }
+.heatmap tbody th:not(.axis-rows) { padding-right: 10px; padding-left: 0; font-size: 12px; line-height: 21px; color: var(--muted); text-align: right; }
+/* The rows' title is ordinary text turned 90° in a column of its own: vertical writing-mode in a narrow cell wraps and
+   overflows in Safari. */
+.heatmap th.axis-rows { position: relative; width: 28px; padding: 0; }
+.heatmap th.axis-rows span { position: absolute; top: 50%; left: 50%; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; line-height: 1.4; color: var(--muted); text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%) rotate(-90deg); }
+.heatmap td { position: relative; z-index: 0; width: 52px; padding-right: 0; padding-left: 0; font-size: 13px; font-weight: 500; line-height: 21px; color: #33404a; text-align: center; }
+.heatmap td::before { content: ""; position: absolute; inset: 2px; z-index: -1; border-radius: 5px; background: color-mix(in oklab, var(--hm-high) calc(var(--v, 0) * 100%), var(--hm-low)); }
+.heatmap td.dark { color: #fff; }
+
+/* Beyond the paper */
+.beyond .eyebrow { color: var(--muted); }
+.beyond .eyebrow::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 8px; border: 1px solid currentColor; border-radius: 50%; vertical-align: 1px; }
+
+/* Q&A */
+.qa details { border-top: 1px solid var(--line); }
+.qa details:last-child { border-bottom: 1px solid var(--line); }
+.qa summary { display: flex; justify-content: space-between; gap: 24px; padding: 16px 0; font-size: 16px; font-weight: 500; list-style: none; cursor: pointer; }
+.qa summary::-webkit-details-marker { display: none; }
+.qa summary::after { content: "+"; color: #999; }
+.qa details[open] summary::after { content: "−"; }
+.qa details p { padding: 0 20px 18px 0; font-size: 15px; line-height: 1.8; color: #555; }
+
+/* Paper & citation */
+.paper-title { margin-top: 8px; font-size: 21px; font-weight: 500; line-height: 1.5; }
+.section .venue { color: var(--muted); }
+.paper-links { display: flex; flex-wrap: wrap; gap: 8px 26px; margin-top: 20px; }
+.text-link { font-size: 14px; color: var(--accent); }
+.citation { margin-top: 32px; }
+.citation-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin: 4px 0 12px; font-size: 13px; color: var(--accent); }
+.citation-copy { padding: 6px 15px; border: 1px solid #c8ccc3; border-radius: 20px; background: #fff; color: var(--ink); font-size: 12px; line-height: 1.6; }
+.citation-copy:hover { border-color: var(--accent); color: var(--accent); }
+.citation-status { min-height: 1.6em; font-size: 13px; color: var(--muted); }
+.citation pre { max-width: 100%; margin: 8px 0 24px; padding: 18px 20px; overflow-wrap: anywhere; white-space: pre-wrap; border: 1px solid var(--line); border-radius: 3px; background: #fff; color: #4a4e45; font: 12px/1.75 var(--mono); tab-size: 2; }
+.affiliation-list { padding-left: 22px; font-size: 14px; line-height: 1.7; }
+.affiliation-list li { padding: 4px 0; }
+.small { font-size: 13px; }
+.credit { margin-top: 28px; font-size: 12px; line-height: 1.6; color: var(--muted); }
+
+/* Full video */
+.chapters { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 22px; margin-top: 18px; }
+.chapters button { padding: 4px 0; border: 0; border-bottom: 1px solid #c8ccc3; background: none; color: #4e5746; font-size: 12px; }
+.chapters button:hover { border-color: var(--accent); color: var(--accent); }
+.chapters span { margin-right: 6px; color: #858b7d; font-variant-numeric: tabular-nums; }
+
+/* Related & footer */
+.related-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
+.related-list a { display: block; height: 100%; padding: 16px 18px; border: 1px solid var(--line); border-radius: 4px; text-decoration: none; }
+.related-list a:hover { border-color: var(--accent); }
+.related-list b { display: block; font-size: 15px; font-weight: 600; line-height: 1.35; }
+.related-list span { display: block; margin-top: 6px; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.footer { display: flex; justify-content: flex-end; gap: 20px; max-width: 1200px; margin: 0 auto; padding: 30px 32px 42px; border-top: 1px solid var(--line); font-size: 11px; color: var(--muted); }
+.footer a { text-decoration: none; }
+.footer p { margin: 0; }
+
+/* Lightbox */
+dialog { width: calc(100vw - 48px); max-width: 1400px; max-height: calc(100vh - 48px); padding: 30px; overflow: auto; border: 0; background: #fff; }
+dialog::backdrop { background: #171d15e8; }
+dialog img { width: auto; max-width: 100%; margin: 0 auto; }
+.close-lightbox { position: sticky; top: 0; z-index: 1; display: block; margin: -16px -16px 4px auto; padding: 5px 10px; border: 0; background: #fff; color: #323c2a; font-size: 28px; line-height: 1; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .hero--cover .hero-frame { min-height: 640px; }
+  .hero--cover.is-split .hero-media { right: 0; }
+  .hero--cover.is-split .hero-media::after { display: none; }
+  .hero--cover .hero-media video { object-position: var(--hero-pos-mobile, var(--hero-pos, 50% 50%)); }
+  .hero--cover .hero-frame::after { background: linear-gradient(180deg, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.05) 24%, rgba(0, 0, 0, 0.45) 48%, rgba(0, 0, 0, 0.9) 74%, rgba(0, 0, 0, 0.96)); }
+  .hero--cover .hero-heading, .hero--cover.is-split .hero-heading { top: auto; right: 32px; bottom: 150px; left: 32px; width: auto; max-width: 640px; }
+  .hero-explore { bottom: 92px; left: 32px; transform: none; }
+  .hero-nav { padding: 20px 32px; }
+  .hero--cover .hero-foot { right: 32px; left: 32px; }
+  .trio { grid-template-columns: 1fr; }
+  .table-pair { grid-template-columns: minmax(0, 470px); gap: 28px; }
+  .heatmap { justify-self: center; }
+}
+@media (max-width: 800px) {
+  .desktop-break { display: none; }
+  .authors { font-size: 14px; }
+  .affiliations { font-size: 12px; }
+  .section-nav { justify-content: flex-start; gap: 22px; }
+  .section { padding: 62px 24px; }
+  .statement { padding: 62px 24px 52px; }
+  .statement .lead { font-size: 20px; }
+  .stat b { font-size: 26px; }
+  .footer { flex-wrap: wrap; }
+  .footer p { order: 3; width: 100%; text-align: center; }
+}
+@media (max-width: 650px) {
+  .hero--cover .hero-heading, .hero--cover.is-split .hero-heading { right: 24px; left: 24px; }
+  .title-main { font-size: clamp(36px, 10vw, 52px); }
+  .title-detail { margin-top: 14px; font-size: 17px; }
+  .hero-explore { left: 24px; font-size: 12px; }
+  .hero--cover .hero-foot { right: 24px; bottom: 20px; left: 24px; font-size: 11px; }
+  .hero-nav { padding: 16px 24px; font-size: 12px; }
+  .hero--stage { padding: 72px 16px 0; }
+  .hero-meta { padding: 28px 20px 32px; }
+  .actions { gap: 8px; }
+  .button { gap: 12px; padding: 8px 13px; font-size: 12px; }
+  .pair { grid-template-columns: 1fr; }
+  .pair.match { flex-direction: column; }
+  .pair.match > * { flex: none; width: 100%; }
+  .strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .strip--scroll { grid-template-columns: none; grid-auto-columns: 150px; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 16px; }
+  .stat + .stat { border-left: 0; }
+  .stat:nth-child(even) { border-left: 1px solid var(--line); }
+  .steps { grid-template-columns: 1fr; gap: 18px; }
+  .steps > .arrow { display: none; }
+  .figure-foot { flex-wrap: wrap; gap: 10px; }
+  .figure-foot > span { flex-basis: 100%; }
+  .figure-foot .motion { margin-left: auto; }
+}
+@media (max-width: 480px) {
+  body { font-size: 16px; }
+  h2 { font-size: 29px; }
+  .question { font-size: 20px; }
+  .section { padding: 50px 20px; }
+  .tabs { gap: 20px; }
+  .tabs button { font-size: 13px; }
+  .chapters { justify-content: flex-start; gap: 10px 18px; }
+  .data-table { font-size: 13px; }
+  .heatmap td { width: 50px; font-size: 12px; }
+  dialog { width: calc(100vw - 22px); padding: 28px 10px 10px; }
+  .citation pre { padding: 14px 12px; font-size: 11px; }
+}
+@media (max-height: 600px) and (min-width: 901px) {
+  .hero--cover .hero-frame { min-height: 540px; }
+  .hero--cover .hero-heading { top: 76px; }
+  .title-main { font-size: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+  </style>
+</head>
+<body style="--accent:#8a2e3a; --accent-hero:#f0a0a8">
+  <a class="skip" href="#overview">Skip to content</a>
+
+  <header class="hero hero--stage" style="--media-w:1920px">
+    <nav class="hero-nav" aria-label="Site">
+      <a href="https://doi.org/10.1109/TIE.2025.3598187">Paper ↗</a>
+    </nav>
+    <div class="hero-heading">
+      <p class="eyebrow">Bio-inspired design · Whisker</p>
+      <h1><span class="title-main">Whisker-Like <span style="white-space:nowrap">2-D</span> Contact Sensor</span><span class="title-detail">for Environmental Perception of Mobile Robots</span></h1>
+    </div>
+    <div class="hero-stage-media is-light">
+      <video id="hero-video" class="loop" muted loop playsinline controls preload="metadata" poster="hero.jpg" width="1920" height="1080" aria-label="Overhead view of a wooden maze: at 20× speed, the small robot drives along the walls through the whole maze, its two whiskers sweeping, and stops next to a monitor; then an orange line of the robot's trajectory and teal dots of the sensed contact points, labelled Trajectory and Contact Points, followed by a blue contour of the walls, labelled Reconstructed Contour." aria-describedby="hero-caption">
+        <source src="hero.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-foot">
+      <p id="hero-caption">Overhead view of the maze: the whole run at 20× speed, the robot following the walls with its whiskers sweeping; then its trajectory and the contact points sensed by its whiskers, and the contour reconstructed from those points.</p>
+      <button class="motion" type="button" data-video="hero-video">Play clip</button>
+    </div>
+    <div class="hero-meta">
+      <p class="authors">Junjie Luo<sup>1,2</sup>, Siyue Yao<sup>1,2</sup>, Tao Yu<sup>1,2</sup>, Yanjun Wang<sup>3</sup>, Hao Wang<sup>2,4</sup>, Genliang Chen<sup>1,5,*</sup></p>
+      <p class="affiliations"><sup>1–5</sup> Shanghai Jiao Tong University &nbsp;·&nbsp; <sup>*</sup>&nbsp;Corresponding&nbsp;author</p>
+      <p class="venue">IEEE Transactions on Industrial Electronics, vol. 73, no. 2, pp. 2544–2553, 2026 · Presented at IROS 2026</p>
+      <div class="actions">
+        <a class="button" href="https://doi.org/10.1109/TIE.2025.3598187">Paper <span aria-hidden="true">↗</span></a>
+        <a class="button" href="#maze">Maze demo <span aria-hidden="true">↓</span></a>
+        <a class="button" href="#video">Full video <span aria-hidden="true">▷</span></a>
+        <a class="button" href="#citation">BibTeX</a>
+      </div>
+    </div>
+  </header>
+
+  <nav class="section-nav" aria-label="On this page">
+    <a href="#overview">Overview</a><a href="#why">Why</a><a href="#design">Design</a><a href="#model">Model</a><a href="#shapes">Shapes</a><a href="#gaps">Gaps</a><a href="#maze">Maze</a><a href="#paper">Paper</a><a href="#video">Video</a>
+  </nav>
+
+  <main>
+    <section class="section statement" id="overview">
+      <div class="reading">
+        <p class="eyebrow">The idea</p>
+        <h2>One elastic beam, three strain gauges:<br><em>a whisker that knows where it was touched.</em></h2>
+        <p class="lead">A thin carbon-fiber beam carries three strain gauges that read how it bends at three points. From those readings, a mechanics model works out where along the beam it was touched, with friction and large bending included.</p>
+        <p>Two of these whiskers, swept by servos on a small mobile robot, let it judge whether a channel is wide enough to pass, follow the walls of an unknown maze, and reconstruct those walls from the contact points alone.</p>
+      </div>
+    </section>
+
+    <section class="section soft" id="why">
+      <div class="reading">
+        <p class="eyebrow">01 / Why whiskers</p>
+        <h2>Touch anywhere<br><em>along the whisker.</em></h2>
+        <p class="question">Why locate a touch anywhere along a whisker, not only at its tip?</p>
+        <p>Rodents and seals use their whiskers to detect obstacles and find their way when other senses are limited. Artificial whiskers aim to give robots the same sense in unknown places, but many report only a load, assume the contact is at the tip, ignore friction, or compute too slowly for real-time use. Those that locate a touch along the shaft need bulky force/torque sensors, or models that hold only without friction.</p>
+        <p>This whisker reads how its beam bends at three points along its length. A model of the beam turns the three readings into the position of a contact along the whisker, not just at its tip, with friction and large bending. Mounted on servos, two whiskers sweep to feel the robot's surroundings.</p>
+      </div>
+      <figure class="reading paper-fig"><a class="zoom" href="fig-1-whiskers.webp"><img src="fig-1-whiskers.webp" width="1500" height="935" loading="lazy" alt="Figure 1: overhead photos of a small wheeled robot moving along a wooden wall, with yellow dots along the wall, and a close-up of the robot's two carbon-fiber whiskers on servos, one pressed against the wall."></a><figcaption>Fig. 1: two whisker-like sensors on a mobile robot: perception in an unstructured environment (left), and sensor sweeping and contact point perception (right).</figcaption></figure>
+    </section>
+
+    <section class="section" id="design">
+      <div class="reading">
+        <p class="eyebrow">02 / Design</p>
+        <h2>A beam that measures<br><em>its own bending.</em></h2>
+        <p class="question">How can three strain gauges locate a touch?</p>
+        <p>The whisker is a carbon-fiber plate 10 mm wide, 0.2 mm thick and 144 mm long, flexible enough to bend far under contact. Three full-bridge strain gauges are glued along it 20 mm apart, and each reads the bending of its own section. A flexible printed circuit board, glued onto the beam and soldered to the gauges' leads, powers them and carries their signals to the sampling board.</p>
+        <p>An AD7895 converter digitizes the voltages, which go over Bluetooth to a laptop; with six gauges connected, the system samples at more than 100 Hz. A 7.4 V lithium battery powers it, so it is portable and wireless. The prototype went through more than 10,000 loading cycles with minimal fatigue and plastic deformation, and low hysteresis.</p>
+      </div>
+      <div class="wide steps" aria-label="How the whisker locates a contact">
+        <div><span>01</span><h4>Measure</h4><p>Each of the three gauges reads the local bending angle of its section</p></div><span class="arrow" aria-hidden="true">→</span>
+        <div><span>02</span><h4>Sense</h4><p>A mechanics model of the beam is solved backward from the three angles</p></div><span class="arrow" aria-hidden="true">→</span>
+        <div><span>03</span><h4>Localize</h4><p>Out comes the contact point in the plane, (x, y)</p></div>
+      </div>
+      <figure class="reading paper-fig"><a class="zoom" href="fig-4-fabrication.webp"><img src="fig-4-fabrication.webp" width="1364" height="1144" loading="lazy" alt="Figure 4: a black carbon-fiber strip 144 mm long, 10 mm wide and 0.2 mm thick; the same strip with three strain gauges 20 mm apart; an orange flexible circuit board soldered over them; the finished whisker with gauges #1 to #3 and a bundle of wires; and a Bluetooth module, an Arduino Mega and a purple power and sampling board."></a><figcaption>Fig. 4: making the whisker: the beam, three strain gauges 20 mm apart, the flexible circuit board and its soldered leads; below, the finished whisker with gauges #1–#3, a Bluetooth module, an Arduino Mega and the power/sampling board.</figcaption></figure>
+      <div class="wide stats">
+        <div class="stat"><b>144 mm</b><span>Carbon-fiber beam, 10&nbsp;mm wide and 0.2&nbsp;mm thick</span></div>
+        <div class="stat"><b>20 mm</b><span>Spacing of the three full-bridge gauges</span></div>
+        <div class="stat"><b>&gt; 100 Hz</b><span>Sampling with six gauges connected</span></div>
+        <div class="stat"><b>&gt; 10,000</b><span>Loading cycles in the durability test</span></div>
+      </div>
+      <details class="evidence reading"><summary>How a gauge reads the bending</summary><figure class="paper-fig"><a class="zoom" href="fig-3-gauges.webp"><img src="fig-3-gauges.webp" width="1321" height="706" loading="lazy" alt="Figure 3: the bent beam drawn as a chain of red joints from a base; boxes mark the sections under the strain gauges, and a close-up shows one gauge on a bent section with its bending angle phi j."></a><figcaption>Fig. 3: each gauge covers a few of the model's joints, from its first to its last, and reads their total bending angle φ<sub>j</sub>.</figcaption></figure></details>
+    </section>
+
+    <section class="section soft" id="model">
+      <div class="reading">
+        <p class="eyebrow">03 / Sensing model</p>
+        <h2>Sensing<br><em>model.</em></h2>
+        <p class="question">Can a model work backward from bending to contact, even with friction?</p>
+        <p>The model divides the beam into many short rigid links joined by elastic joints. The whisker moves in a plane, and it is far thinner than it is wide, so each joint only bends: shear and compression are negligible next to bending. For a given contact, the joints settle where their spring torques balance the contact force, which has a normal part and, because the model allows static friction, a friction part along the beam.</p>
+        <p>Run in reverse, the three readings become constraints: the solver looks for the contact location and the normal and friction forces that bend the three sections by exactly the measured amounts. That makes three unknowns besides the beam's shape, so three gauges are the minimum. If friction is neglected, two unknowns remain, and the three readings are fitted by least squares.</p>
+      </div>
+      <figure class="wide paper-fig"><a class="zoom" href="fig-2-model.webp"><img src="fig-2-model.webp" width="2000" height="695" loading="lazy" alt="Figure 2: a photo of the sensorized beam bent by a round external contact on a test rig; a drawing of the beam discretized into segments joined by joints, connected in series; and a plot of the bent beam as a chain of red joints from the base frame S to the contact frame C, with the normal and friction forces."></a><figcaption>Fig. 2: the beam under a single contact, its equivalent chain of rigid links and elastic joints, and the kinetostatics model, with the contact force F<sub>c</sub> = F<sub>n</sub> + F<sub>s</sub>.</figcaption></figure>
+      <div class="reading">
+        <p>To calibrate, a freely rotating pulley pressed the whisker at 54 positions on both sides, so the contact could be treated as frictionless. A linear fit gave each gauge's bending per volt, and the model then placed the 54 contacts with a mean residual of 3.56 mm.</p>
+        <p>To validate, the pulley was bolted so it could not turn, and friction acted. Over 112 poses in both bending directions, covering more than 60% of the whisker's length, the mean error was 6.45 mm, 4.45% of the beam's length. Between 50 and 100 mm from the base, a range similar to the calibration's, it was 4.78 mm. In one case shown in Fig. 7, the tip was pushed backward and a gauge section bent by more than 10°.</p>
+      </div>
+      <div class="wide stats">
+        <div class="stat"><b>6.45 mm</b><span>Mean contact error, 112&nbsp;poses with friction (4.45% of the beam's length)</span></div>
+        <div class="stat"><b>4.78 mm</b><span>Mean error 50–100&nbsp;mm from the base</span></div>
+        <div class="stat"><b>3.56 mm</b><span>Mean calibration residual, 54&nbsp;poses</span></div>
+      </div>
+      <figure class="reading paper-fig"><a class="zoom" href="fig-7-validation.webp"><img src="fig-7-validation.webp" width="1543" height="1350" loading="lazy" alt="Figure 7: (a) a grid of validation poses on both sides of the whisker, labelled upward and downward bending, with calibration poses among them; (b) a photo of the bent whisker with the reference and calculated deformations and the estimated contact point; (c) position errors plotted along the whisker for upward and downward bending."></a><figcaption>Fig. 7: (a) the validation poses in both bending directions; (b) the calculated beam shape over the photo for one pose; (c) the position error of each contact along the beam.</figcaption></figure>
+    </section>
+
+    <section class="section" id="shapes">
+      <div class="reading">
+        <p class="eyebrow">04 / Active sensing</p>
+        <h2>Feeling shapes<br><em>by sweeping.</em></h2>
+        <p class="question">What can a sweeping whisker tell about an object?</p>
+        <p>With its base on a platform that rotates in the plane, the whisker swept past a cylinder whose center was 100 mm from the base. Rotating, it touched the cylinder at a series of points, recorded every 5° of rotation, and a least-squares circle through the points gave the cylinder's radius and center.</p>
+        <p>For cylinders of 10, 15 and 20 mm radius, the radius was off by 0.97 mm on average, and the center by 1.17 mm.</p>
+      </div>
+      <figure class="reading paper-fig"><a class="zoom" href="fig-8-cylinders.webp"><img src="fig-8-cylinders.webp" width="1552" height="1327" loading="lazy" alt="Figure 8: (a) the whisker on a rotating platform, bent around a cylinder 100 mm away, with the estimated contact points, center and radius drawn over the photo; (b) three plots of estimated contact points with fitted and reference circles for radii of 10, 15 and 20 mm."></a><figcaption>Fig. 8: (a) the setup, with the whisker on a rotating platform 100 mm from the object; (b) the estimated contact points with the fitted and reference circles for the three cylinders.</figcaption></figure>
+      <figure class="reading table-fig">
+        <div class="table-wrap" tabindex="0" role="region" aria-labelledby="table-1-caption">
+          <table class="data-table">
+            <thead><tr><th scope="col">Cylinder · parameter</th><th scope="col">Reference (mm)</th><th scope="col">Identified (mm)</th><th scope="col">Error (mm)</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">#1&nbsp;·&nbsp;radius</th><td>10.00</td><td>11.66</td><td>1.66</td></tr>
+              <tr><th scope="row">#1&nbsp;·&nbsp;center</th><td>(100.00, 0.00)</td><td>(99.02, −0.10)</td><td>0.98</td></tr>
+              <tr><th scope="row">#2&nbsp;·&nbsp;radius</th><td>15.00</td><td>15.42</td><td>0.42</td></tr>
+              <tr><th scope="row">#2&nbsp;·&nbsp;center</th><td>(100.00, 0.00)</td><td>(99.05, 0.63)</td><td>1.14</td></tr>
+              <tr><th scope="row">#3&nbsp;·&nbsp;radius</th><td>20.00</td><td>19.18</td><td>−0.82</td></tr>
+              <tr><th scope="row">#3&nbsp;·&nbsp;center</th><td>(100.00, 0.00)</td><td>(98.63, −0.19)</td><td>1.39</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <figcaption id="table-1-caption">Table I: the identified radius and center of each cylinder, with their errors.</figcaption>
+      </figure>
+    </section>
+
+    <section class="section soft" id="gaps">
+      <div class="reading">
+        <p class="eyebrow">05 / Channel width</p>
+        <h2>Will it<br><em>fit?</em></h2>
+        <p class="question">Can a robot decide by touch whether a gap is wide enough?</p>
+        <p>Rats can judge the width of a narrow opening with their whiskers. Here a four-wheeled robot carries two whiskers on servos. Placed with its center line parallel to a channel, it sweeps both whiskers from straight ahead to 60° outward, one sweep every 8 s, and the points where they touch the two sides give the channel's width. The slow sweep keeps the contacts quasi-static, so the model still holds.</p>
+        <p>Over six widths from 90 to 165 mm, five trials each, the mean error was 2.24 mm, and the deviations of all trials stayed within 4.50 mm.</p>
+        <p>To decide whether it can pass, the robot compares the sensed width with its own size. Facing two parallel channels, 120 and 160 mm wide, it finds the narrower one impassable, shifts sideways to the wider one, finds it wide enough and drives through.</p>
+      </div>
+      <div class="wide">
+        <div class="tabs" role="tablist" aria-label="Channels">
+          <button id="tab-gap-120" role="tab" aria-selected="true" aria-controls="panel-gap-120">120 mm · Impassable</button>
+          <button id="tab-gap-160" role="tab" aria-selected="false" aria-controls="panel-gap-160">160 mm · Passable</button>
+        </div>
+        <div class="tab-panel" id="panel-gap-120" role="tabpanel" aria-labelledby="tab-gap-120">
+          <figure class="clip"><video id="clip-gap-120" class="loop" muted loop playsinline controls preload="none" poster="clip-gap-120.jpg" width="1280" height="720" aria-label="Top view: the robot faces a narrow channel between cardboard blocks; its two whiskers sweep outward against the channel's sides, then a red dashed line ends in a cross labelled Impassable."><source src="clip-gap-120.mp4" type="video/mp4"></video><figcaption class="figure-foot"><span>At the 120 mm channel, both whiskers sweep against its sides, and the robot marks the channel impassable. Real time.</span><button type="button" class="motion" data-video="clip-gap-120">Play clip</button></figcaption></figure>
+        </div>
+        <div class="tab-panel" id="panel-gap-160" role="tabpanel" aria-labelledby="tab-gap-160">
+          <figure class="clip"><video id="clip-gap-160" class="loop" muted loop playsinline controls preload="none" poster="clip-gap-160.jpg" width="1280" height="720" aria-label="Top view: a green line labelled Passable runs from the robot into the wider channel, then the robot drives through the channel."><source src="clip-gap-160.mp4" type="video/mp4"></video><figcaption class="figure-foot"><span>The 160 mm channel is marked passable, and the robot drives through it. Real time.</span><button type="button" class="motion" data-video="clip-gap-160">Play clip</button></figcaption></figure>
+        </div>
+      </div>
+      <div class="wide stats">
+        <div class="stat"><b>2.24 mm</b><span>Mean width error</span></div>
+        <div class="stat"><b>90–165 mm</b><span>Six channel widths, five trials each</span></div>
+        <div class="stat"><b>60°</b><span>Sweep range, one sweep every 8&nbsp;s</span></div>
+      </div>
+      <figure class="reading paper-fig"><a class="zoom" href="fig-10-channels.webp"><img src="fig-10-channels.webp" width="1502" height="1748" loading="lazy" alt="Figure 10: top views of the robot sweeping its whiskers in a channel of adjustable width, with the two contacts and the estimated width d1 plus d2; the robot rejecting the 120 mm channel, moving sideways and passing through the 160 mm channel; and a bar chart of reference and sensed widths for six tests."></a><figcaption>Fig. 10: the width is the sum d<sub>1</sub> + d<sub>2</sub> of the two contacts' distances from the center line (top left); the robot rejects the 120 mm channel, moves sideways and passes the 160 mm one (top right); reference and sensed widths for the six channels (bottom).</figcaption></figure>
+    </section>
+
+    <section class="section" id="maze">
+      <div class="reading">
+        <p class="eyebrow">06 / Maze</p>
+        <h2>Mapping a maze<br><em>by touch.</em></h2>
+        <p class="question">Can touch alone guide a robot through an unknown maze, and draw it?</p>
+        <p>The robot's microcontroller, an Arduino Mega 2560, has little computing power, so it does not solve the model's equations. Instead, the model generated 5934 sets of contact positions and the whisker deformations that go with them, and a small neural network with three hidden layers of nine nodes was trained on them. Run as matrix operations, it estimates a contact position in 11 ms, faster than 90 Hz, with accuracy similar to the full model. With 10 ms for sampling at 100 Hz and about 8 ms of motor latency, the whole loop from sensing to action runs at about 35 Hz.</p>
+      </div>
+      <figure class="wide clip"><video id="clip-maze" class="loop" muted loop playsinline controls preload="none" poster="clip-maze.jpg" width="1280" height="720" aria-label="Overhead view of the wooden maze: the small robot drives along the walls with its two whiskers sweeping, turns down into a corridor, along the bottom and back up, while a monitor stands beside the maze."><source src="clip-maze.mp4" type="video/mp4"></video><figcaption class="figure-foot"><span>Right-wall following through the maze: the whiskers sweep while the robot keeps the wall on its right and turns at the corners. 5× speed.</span><button type="button" class="motion" data-video="clip-maze">Play clip</button></figcaption></figure>
+      <div class="wide stats">
+        <div class="stat"><b>&gt; 90 Hz</b><span>Contact estimation on the Arduino, 11&nbsp;ms each</span></div>
+        <div class="stat"><b>≈ 35 Hz</b><span>The whole loop, from sensing to action</span></div>
+        <div class="stat"><b>5934</b><span>Model-generated samples for training</span></div>
+      </div>
+      <div class="reading">
+        <p>In a 2400 × 1200 mm field of straight walls, arcs and a maze-like section with sharp corners, the robot followed the right-hand wall with no prior map. Both whiskers swept 60° at 0.3 Hz. Along straight walls and arcs, a PID controller set the wheel speeds to keep the robot's distance from the wall, sensed by the right whisker, near 60 mm. A wall ahead shows up because at least one gauge bends in a different direction from the others, and the robot turns left; when the right whisker has had no contact for 2.5 s, the wall has turned away, and the robot turns right until it touches again.</p>
+      </div>
+      <figure class="wide paper-fig"><a class="zoom" href="fig-11-maze.webp"><img src="fig-11-maze.webp" width="2000" height="799" loading="lazy" alt="Figure 11: an overhead photo of the 2400 by 1200 mm wooden field with straight lines, an arc, U-turns, sharp corners and a maze-like contour, the robot's route drawn with arrows from the start point to the end point; beside it, the control strategy for straight lines and arcs, left turns and right turns, with photos of the robot."></a><figcaption>Fig. 11: the 2400 × 1200 mm field and the control rules: a PID controller holds a 60 mm distance along straight walls and arcs; a front contact, with gauges bending in different directions, means turn left; no contact for 2.5 s means turn right.</figcaption></figure>
+      <div class="reading">
+        <p>Each contact point was logged with the wheel encoders' speed and the IMU's heading and sent over Bluetooth to a computer, which drew the robot's trajectory and the contact points in real time. Over several runs, the robot followed straight and curved walls, made 90° and 180° turns through the maze, and reached the end, regaining contact after losing it. Splines fitted to the contact points reconstruct the walls: the fitted contour generally matches the real one, with errors from the encoders, the IMU and the open-loop servo angles.</p>
+      </div>
+      <figure class="reading paper-fig"><a class="zoom" href="fig-12-reconstruction.webp"><img src="fig-12-reconstruction.webp" width="1413" height="1672" loading="lazy" alt="Figure 12: two overhead photos of the maze: teal contact points along the walls with the robot's dashed orange trajectory from the start point to the end point, and a blue contour fitted to the contact points over the walls."></a><figcaption>Fig. 12: one run: the contact points and the robot's trajectory (top), and the contour fitted to the contact points (bottom).</figcaption></figure>
+    </section>
+
+    <section class="section soft" id="qa">
+      <div class="reading">
+        <p class="eyebrow">Questions &amp; answers</p>
+        <h2>Common questions.</h2>
+        <div class="qa">
+          <details><summary>Why three strain gauges?</summary><p>Besides the beam's shape, the model has three unknowns: where along the beam the contact is, and the sizes of its normal and friction forces. Each gauge adds one equation, so three gauges are the minimum. Using only the minimum makes the estimate sensitive to noise in any one gauge, so the authors suggest adding gauges with better signal conditioning.</p></details>
+          <details><summary>How can an Arduino run the model?</summary><p>It runs a network trained on the model instead. The model generated 5934 sets of contact positions and the whisker deformations they cause, and a network with three hidden layers of nine nodes was trained on them. As matrix operations, it takes 11 ms per estimate on an Arduino Mega 2560, with accuracy similar to solving the full model.</p></details>
+          <details><summary>What limits the accuracy?</summary><p>Noise in the gauges and the sampling circuit, which matters more with only three gauges; tolerances in the 3-D-printed mount and contact objects, which can bend the beam out of its plane and add shear; and contacts that land on a gauge's solder joints or wires instead of the beam's surface. The authors suggest more gauges, precision-machined parts, and strain-sensitive grids deposited directly on the flexible circuit board.</p></details>
+          <details><summary>Does it sense 3-D contact?</summary><p>No. The whisker and its model work in one plane, for one contact at a time. Out-of-plane and multi-point contact, smaller strain gauges and new structural designs are the authors' next steps.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="paper">
+      <div class="reading">
+        <p class="eyebrow">Paper &amp; authors</p>
+        <h2>Contact sensing<br><em>from beam mechanics.</em></h2>
+        <p class="paper-title">A Whisker-Like 2-D Contact Sensor for Environmental Perception of Mobile Robots</p>
+        <p>Junjie Luo, Siyue Yao, Tao Yu, Yanjun Wang, Hao Wang, and Genliang Chen.</p>
+        <p class="venue">IEEE Transactions on Industrial Electronics, vol. 73, no. 2, pp. 2544–2553, February 2026. Presented at IROS 2026, Pittsburgh.</p>
+        <div class="paper-links"><a class="text-link" href="https://doi.org/10.1109/TIE.2025.3598187">Read the paper at doi.org/10.1109/TIE.2025.3598187 ↗</a></div>
+        <details class="evidence citation" id="citation">
+          <summary>Citation / BibTeX</summary>
+          <div class="citation-actions"><button class="citation-copy" id="copy-bibtex" type="button" aria-describedby="citation-status" hidden>Copy BibTeX</button><a href="citation.bib" download>Download .bib ↓</a></div>
+          <p class="citation-status" id="citation-status" role="status" aria-live="polite"></p>
+          <pre tabindex="0" aria-label="BibTeX citation"><code id="bibtex">@article{luo2026whisker,
+  title     = {A Whisker-Like 2-D Contact Sensor for Environmental Perception of Mobile Robots},
+  author    = {Luo, Junjie and Yao, Siyue and Yu, Tao and Wang, Yanjun and Wang, Hao and Chen, Genliang},
+  journal   = {IEEE Transactions on Industrial Electronics},
+  volume    = {73},
+  number    = {2},
+  pages     = {2544--2553},
+  year      = {2026},
+  publisher = {Institute of Electrical and Electronics Engineers (IEEE)},
+  doi       = {10.1109/TIE.2025.3598187}
+}</code></pre>
+        </details>
+        <details class="evidence"><summary>Full affiliations</summary><ol class="affiliation-list"><li>META Robotics Institute, Shanghai Jiao Tong University, Shanghai, China</li><li>Shanghai Key Laboratory of Digital Manufacture for Thin-Walled Structures, Shanghai Jiao Tong University, Shanghai, China</li><li>Institute of Marine Equipment, Shanghai Jiao Tong University, Shanghai, China</li><li>State Key Laboratory of Mechanical System and Vibration, Shanghai Jiao Tong University, Shanghai, China</li><li>Shanghai Key Laboratory of Intelligent Robotics, Shanghai Jiao Tong University, Shanghai, China</li></ol><p class="small">* Corresponding author: Genliang Chen</p></details>
+      </div>
+      <figure class="reading paper-fig"><a class="zoom" href="fig-poster.webp"><img src="fig-poster.webp" width="2000" height="1445" loading="lazy" alt="The IROS 2026 poster, with a maroon header: the title, the authors and four headline numbers, then panels on the background, the idea (measure, sense, localize), the design and system integration, the kinematics and sensing model, cylinder parameter estimation, gap width sensing with maze exploration, and conclusions."></a><figcaption>The IROS 2026 poster.</figcaption></figure>
+    </section>
+
+    <section class="section soft" id="video">
+      <div class="reading">
+        <p class="eyebrow">The complete video</p>
+        <h2>Watch both demonstrations.</h2>
+        <p>The robot estimates the widths of two channels and passes through the wider one, in real time; then it follows the walls of the maze, at 5× speed for most of the run, and the trajectory, the contact points and the reconstructed contour are shown.</p>
+      </div>
+      <div class="wide">
+        <video id="video-iros" controls playsinline preload="none" poster="video-iros.jpg" width="1280" height="720" aria-label="The complete video: the robot estimates the widths of two channels, rejects the narrower one and drives through the wider one; then it follows the walls of a maze at 5× speed, and the trajectory, contact points and reconstructed contour are shown."><source src="video-iros.mp4" type="video/mp4">Your browser does not support embedded video. <a href="video-iros.mp4">Download the video</a>.</video>
+        <div class="chapters" aria-label="Chapters">
+          <button type="button" data-target="video-iros" data-time="0"><span>0:00</span>Width estimation</button>
+          <button type="button" data-target="video-iros" data-time="51"><span>0:51</span>Contour following</button>
+          <button type="button" data-target="video-iros" data-time="95"><span>1:35</span>Reconstruction</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section related" id="related">
+      <div class="wide">
+        <p class="eyebrow">Related projects</p>
+        <ul class="related-list">
+          <li><a href="https://multimodal-whisker.github.io/"><b>Multimodal whisker</b><span>The group's later whisker: four strain gauges sense touch and airflow · Sensors and Actuators A 2026</span></a></li>
+          <li><a href="https://elastic-beam-sensing.github.io/"><b>Contact sensing with elastic beams</b><span>A curved carbon-fiber beam with eight strain gauges feels where, and how hard, it is touched · IJRR 2026</span></a></li>
+          <li><a href="https://bdml.stanford.edu/pages/FBG_Whisker_share/"><b>FBG whiskers ↗</b><span>Fiber Bragg grating whiskers that sense water flow around underwater robots · arXiv 2026, under review</span></a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <a href="#paper">Paper &amp; authors ↑</a>
+  </footer>
+  <dialog id="lightbox" aria-label="Enlarged figure"><button class="close-lightbox" type="button" aria-label="Close enlarged figure">×</button><img alt=""></dialog>
+<script>
+// Shared behavior for Siyue Yao's project pages: looping clips that play only while on screen, tabs,
+// chapter buttons, links that open <details>, BibTeX copy, the figure lightbox and section highlighting.
+// No dependencies. Without JavaScript every tab panel stays visible and clips keep native controls.
+(() => {
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  /* Looping clips */
+  const loops = [...document.querySelectorAll("video.loop")];
+  const manualPause = new WeakSet();
+  const inView = new WeakSet();
+  const buttonFor = (video) => document.querySelector(`[data-video="${video.id}"]`);
+  function update(video) {
+    const button = buttonFor(video);
+    if (!button) return;
+    button.textContent = video.paused ? "Play clip" : "Pause clip";
+    button.setAttribute("aria-pressed", String(!video.paused));
+  }
+  function play(video) {
+    const promise = video.play();
+    if (promise) promise.catch(() => update(video));
+  }
+  const mayAutoplay = (video) => inView.has(video) && !manualPause.has(video) && !reduced.matches && !document.hidden;
+  loops.forEach((video) => {
+    video.muted = true;
+    video.removeAttribute("controls");
+    video.addEventListener("play", () => update(video));
+    video.addEventListener("pause", () => update(video));
+    update(video);
+    const button = buttonFor(video);
+    if (button) {
+      button.addEventListener("click", () => {
+        if (video.paused) { manualPause.delete(video); play(video); }
+        else { manualPause.add(video); video.pause(); }
+      });
+    }
+  });
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((entries) => entries.forEach(({ target, isIntersecting }) => {
+      if (isIntersecting) { inView.add(target); if (mayAutoplay(target)) play(target); }
+      else { inView.delete(target); target.pause(); }
+    }), { threshold: 0.3 });
+    loops.forEach((video) => observer.observe(video));
+  }
+  const resync = () => loops.forEach((video) => {
+    if (mayAutoplay(video)) play(video);
+    else if (document.hidden || reduced.matches) video.pause();
+  });
+  document.addEventListener("visibilitychange", resync);
+  reduced.addEventListener("change", resync);
+
+  /* Full videos: only one plays at a time */
+  const fullVideos = [...document.querySelectorAll("video:not(.loop)")];
+  fullVideos.forEach((video) => video.addEventListener("play", () => {
+    fullVideos.forEach((other) => { if (other !== video) other.pause(); });
+  }));
+
+  /* Tabs */
+  document.querySelectorAll('[role="tablist"]').forEach((list) => {
+    const tabs = [...list.querySelectorAll('[role="tab"]')];
+    if (!tabs.length) return;
+    const panelOf = (tab) => document.getElementById(tab.getAttribute("aria-controls"));
+    function select(selected, moveFocus = false) {
+      tabs.forEach((tab) => {
+        const active = tab === selected;
+        tab.setAttribute("aria-selected", String(active));
+        tab.tabIndex = active ? 0 : -1;
+        const panel = panelOf(tab);
+        if (!panel) return;
+        panel.hidden = !active;
+        if (!active) panel.querySelectorAll("video").forEach((video) => video.pause());
+      });
+      if (moveFocus) selected.focus();
+    }
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => select(tab));
+      tab.addEventListener("keydown", (event) => {
+        const target = { ArrowRight: (index + 1) % tabs.length, ArrowLeft: (index + tabs.length - 1) % tabs.length, Home: 0, End: tabs.length - 1 }[event.key];
+        if (target === undefined) return;
+        event.preventDefault();
+        select(tabs[target], true);
+      });
+    });
+    select(tabs.find((tab) => tab.getAttribute("aria-selected") === "true") || tabs[0]);
+  });
+
+  /* Chapter buttons: <button data-target="video-id" data-time="12.4"> */
+  document.querySelectorAll("button[data-time][data-target]").forEach((button) => button.addEventListener("click", () => {
+    const video = document.getElementById(button.dataset.target);
+    if (!video) return;
+    const seek = () => { video.currentTime = Number(button.dataset.time); play(video); };
+    if (video.readyState >= 1) seek();
+    else {
+      video.addEventListener("loadedmetadata", seek, { once: true });
+      video.preload = "metadata";
+      video.load();
+    }
+    video.scrollIntoView({ block: "center", behavior: reduced.matches ? "instant" : "smooth" });
+  }));
+
+  /* Links to a <details> open it (e.g. the BibTeX button) */
+  const openDetails = (hash) => {
+    if (!hash || hash.length < 2) return;
+    const target = document.getElementById(decodeURIComponent(hash.slice(1)));
+    if (target instanceof HTMLDetailsElement) target.open = true;
+  };
+  document.querySelectorAll('a[href^="#"]').forEach((link) => link.addEventListener("click", () => openDetails(link.hash)));
+  openDetails(window.location.hash);
+
+  /* BibTeX copy */
+  const copy = document.getElementById("copy-bibtex");
+  const bibtex = document.getElementById("bibtex");
+  const status = document.getElementById("citation-status");
+  if (copy && bibtex && status) {
+    copy.hidden = false;
+    copy.addEventListener("click", async () => {
+      status.textContent = "";
+      try {
+        if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error("Clipboard unavailable");
+        await navigator.clipboard.writeText(`${bibtex.textContent.trim()}\n`);
+        status.textContent = "BibTeX copied to clipboard.";
+      } catch {
+        status.textContent = "Could not copy automatically. Select the BibTeX below and copy it, or download the .bib file.";
+      }
+    });
+  }
+
+  /* Figure lightbox */
+  const lightbox = document.getElementById("lightbox");
+  if (lightbox && typeof lightbox.showModal === "function") {
+    const image = lightbox.querySelector("img");
+    document.querySelectorAll("a.zoom").forEach((link) => link.addEventListener("click", (event) => {
+      event.preventDefault();
+      image.src = link.href;
+      image.alt = link.querySelector("img")?.alt || "";
+      lightbox.showModal();
+      document.body.style.overflow = "hidden";
+    }));
+    lightbox.querySelector("button").addEventListener("click", () => lightbox.close());
+    lightbox.addEventListener("click", (event) => { if (event.target === lightbox) lightbox.close(); });
+    lightbox.addEventListener("close", () => { document.body.style.overflow = ""; });
+  }
+
+  /* Section nav highlight */
+  const navLinks = [...document.querySelectorAll(".section-nav a")];
+  if (navLinks.length && "IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      navLinks.forEach((link) => link.classList.toggle("active", link.hash === `#${entry.target.id}`));
+    }), { rootMargin: "-20% 0px -65% 0px" });
+    navLinks.forEach((link) => {
+      const section = document.getElementById(decodeURIComponent(link.hash.slice(1)));
+      if (section) observer.observe(section);
+    });
+  }
+})();
+</script>
+</body>
+</html>
